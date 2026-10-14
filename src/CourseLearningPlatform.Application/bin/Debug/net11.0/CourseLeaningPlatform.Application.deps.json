@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v11.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v11.0": {
+      "CourseLeaningPlatform.Application/1.0.0": {
+        "dependencies": {
+          "CourseLeaningPlatform.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CourseLeaningPlatform.Application.dll": {}
+        }
+      },
+      "CourseLeaningPlatform.Domain/1.0.0": {
+        "runtime": {
+          "CourseLeaningPlatform.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CourseLeaningPlatform.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CourseLeaningPlatform.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

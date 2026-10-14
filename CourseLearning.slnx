@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/CourseLearningPlatform.Api/">
+    <Project Path="src/CourseLearningPlatform.Api/CourseLeaningPlatform.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/CourseLearningPlatform.Application/">
+    <Project Path="src/CourseLearningPlatform.Application/CourseLeaningPlatform.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/CourseLearningPlatform.Domain/">
+    <Project Path="src/CourseLearningPlatform.Domain/CourseLeaningPlatform.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/CourseLearningPlatform.Infrastructure/">
+    <Project Path="src/CourseLearningPlatform.Infrastructure/CourseLeaningPlatform.Infrastructure.csproj" />
+  </Folder>
+</Solution>

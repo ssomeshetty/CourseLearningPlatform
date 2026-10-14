@@ -1,0 +1,15 @@
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\bin\Debug\net11.0\CourseLeaningPlatform.Application.deps.json
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\bin\Debug\net11.0\CourseLeaningPlatform.Application.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\bin\Debug\net11.0\CourseLeaningPlatform.Application.pdb
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\bin\Debug\net11.0\CourseLeaningPlatform.Domain.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\bin\Debug\net11.0\CourseLeaningPlatform.Domain.pdb
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.csproj.AssemblyReference.cache
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.AssemblyInfoInputs.cache
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.AssemblyInfo.cs
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.csproj.CoreCompileInputs.cache
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLe.A0790F29.Up2Date
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\refint\CourseLeaningPlatform.Application.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\CourseLeaningPlatform.Application.pdb
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Application\obj\Debug\net11.0\ref\CourseLeaningPlatform.Application.dll

@@ -1,0 +1,109 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v11.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v11.0": {
+      "CourseLeaningPlatform.Api/1.0.0": {
+        "dependencies": {
+          "CourseLeaningPlatform.Application": "1.0.0",
+          "CourseLeaningPlatform.Infrastructure": "1.0.0",
+          "Microsoft.AspNetCore.OpenApi": "11.0.0-rc.1.26425.128"
+        },
+        "runtime": {
+          "CourseLeaningPlatform.Api.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.OpenApi/11.0.0-rc.1.26425.128": {
+        "dependencies": {
+          "Microsoft.OpenApi": "3.10.0"
+        },
+        "runtime": {
+          "lib/net11.0/Microsoft.AspNetCore.OpenApi.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628",
+            "localPath": "Microsoft.AspNetCore.OpenApi.dll"
+          }
+        }
+      },
+      "Microsoft.OpenApi/3.10.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.OpenApi.dll": {
+            "assemblyVersion": "3.10.0.0",
+            "fileVersion": "3.10.0.0",
+            "localPath": "Microsoft.OpenApi.dll"
+          }
+        }
+      },
+      "CourseLeaningPlatform.Application/1.0.0": {
+        "dependencies": {
+          "CourseLeaningPlatform.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CourseLeaningPlatform.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "CourseLeaningPlatform.Domain/1.0.0": {
+        "runtime": {
+          "CourseLeaningPlatform.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "CourseLeaningPlatform.Infrastructure/1.0.0": {
+        "dependencies": {
+          "CourseLeaningPlatform.Application": "1.0.0",
+          "CourseLeaningPlatform.Domain": "1.0.0"
+        },
+        "runtime": {
+          "CourseLeaningPlatform.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CourseLeaningPlatform.Api/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.AspNetCore.OpenApi/11.0.0-rc.1.26425.128": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Gy2njnO4YX6Vdd8ca5q86MNYQSyMdvWKkLiQrT4cvCgIyTg+pNIwh5Sq+LJf+gzIXmeBnolE+RWDYOkbnndDZA==",
+      "path": "microsoft.aspnetcore.openapi/11.0.0-rc.1.26425.128",
+      "hashPath": "microsoft.aspnetcore.openapi.11.0.0-rc.1.26425.128.nupkg.sha512"
+    },
+    "Microsoft.OpenApi/3.10.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Iltx5vuQ+TWyuxsLNnLAaqm9RDdOtwWLgJtwH/XSKe/MkdpDQepqDi7it/4OM7JpLsHl1Ir65mm9vpAkbiNlow==",
+      "path": "microsoft.openapi/3.10.0",
+      "hashPath": "microsoft.openapi.3.10.0.nupkg.sha512"
+    },
+    "CourseLeaningPlatform.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CourseLeaningPlatform.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CourseLeaningPlatform.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

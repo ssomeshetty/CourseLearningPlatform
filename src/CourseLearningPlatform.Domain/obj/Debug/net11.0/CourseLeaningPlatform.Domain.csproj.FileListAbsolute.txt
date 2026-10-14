@@ -1,0 +1,12 @@
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\bin\Debug\net11.0\CourseLeaningPlatform.Domain.deps.json
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\bin\Debug\net11.0\CourseLeaningPlatform.Domain.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\bin\Debug\net11.0\CourseLeaningPlatform.Domain.pdb
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.AssemblyInfoInputs.cache
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.AssemblyInfo.cs
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.csproj.CoreCompileInputs.cache
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\refint\CourseLeaningPlatform.Domain.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLeaningPlatform.Domain.pdb
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\ref\CourseLeaningPlatform.Domain.dll
+C:\Users\sak\OneDrive - Itron\Desktop\CourseLearningPlatform\src\CourseLearningPlatform.Domain\obj\Debug\net11.0\CourseLe.54837CE8.Up2Date
