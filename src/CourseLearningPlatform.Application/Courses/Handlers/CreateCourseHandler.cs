@@ -20,3 +20,46 @@ public sealed class CreateCourseHandler(ICourseRepository courseRepository)
         return await courseRepository.AddAsync(course, cancellationToken);
     }
 }
+
+
+public sealed class UpdateCourseHandler(ICourseRepository courseRepository)
+{
+    public async Task<Course?> HandleAsync(int id, UpdateCourseCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var course = await courseRepository.GetByIdAsync(id, cancellationToken);
+        if (course is null)
+        {
+            return null;
+
+        }
+
+        course.Title = command.Title;
+        course.Description = command.Description;
+        course.Instructor = command.Instructor;
+        course.Cost = command.Cost;
+        course.Hours = command.Hours;
+
+        await courseRepository.UpdateAsync(course, cancellationToken);
+        return course;
+
+    }
+}
+
+public sealed class DeleteCourseHandler(ICourseRepository courseRepository)
+{
+    public async Task<Course?> HandleAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var course = await courseRepository.GetByIdAsync(id, cancellationToken);
+
+        if (course is null)
+        {
+            return null;
+
+        }
+
+        await courseRepository.DeleteAsync(id, cancellationToken);
+        return course;
+
+    }
+}

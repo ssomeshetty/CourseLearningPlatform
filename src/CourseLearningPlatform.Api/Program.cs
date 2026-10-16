@@ -14,9 +14,13 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
 builder.Services.AddScoped<CreateCourseHandler>();
 
+builder.Services.AddScoped<UpdateCourseHandler>();
+
+builder.Services.AddScoped<DeleteCourseHandler>();
+
 builder.Services.AddScoped<CourseQueryHandler>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(); 
 
 builder.Services.AddOpenApi();
 
@@ -25,7 +29,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-}
+} 
 
 app.UseHttpsRedirection();
 
