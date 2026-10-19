@@ -1,0 +1,38 @@
+$kind: http-request
+name: 'Create Course'
+method: POST
+url: '{{base_url}}/api/courses'
+order: 1000
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Introduction to .NET",
+      "description": "A beginner-friendly course on .NET development.",
+      "instructor": "John Doe",
+      "cost": 49.99,
+      "hours": 10.5
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status code is 201 Created", function () {
+          pm.response.to.have.status(201);
+      });
+      pm.test("Response has course id", function () {
+          var json = pm.response.json();
+          pm.expect(json).to.have.property("id");
+          pm.expect(json.id).to.be.a("number");
+      });
+      pm.test("Response has correct title", function () {
+          var json = pm.response.json();
+          pm.expect(json.title).to.eql("Introduction to .NET");
+      });
+      // Save the created course id for use in other requests
+      if (pm.response.code === 201) {
+          pm.globals.set("courseId", pm.response.json().id);
+      }
