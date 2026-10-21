@@ -1,5 +1,4 @@
-﻿using CourseLearningPlatform.Application.AssignedCourses.Commands;
-using CourseLearningPlatform.Application.AssignedCourses.Exceptions;
+using CourseLearningPlatform.Application.AssignedCourses.Commands;
 using CourseLearningPlatform.Application.AssignedCourses.Interfaces;
 using CourseLearningPlatform.Domain.AssignedCourses;
 
@@ -22,24 +21,14 @@ public sealed class UpdateAssignedCourseStatusHandler(
             return null;
         }
 
-        var allowedNextStatus = assignment.Status switch
-        {
-            AssignedCourseStatus.Started => AssignedCourseStatus.InProgress,
-            AssignedCourseStatus.InProgress => AssignedCourseStatus.Completed,
-            _ => (AssignedCourseStatus?)null
-        };
-
-        if (allowedNextStatus != command.NewStatus)
-        {
-            throw new InvalidAssignedCourseStatusTransitionException(
-                $"Cannot change course status from {assignment.Status} to {command.NewStatus}. " +
-                "Allowed transitions are Started to InProgress, then InProgress to Completed.");
-        }
-
         assignment.Status = command.NewStatus;
         if (command.NewStatus == AssignedCourseStatus.Completed)
         {
-            assignment.EndedTimestamp = DateTime.UtcNow;
+            assignment.CompletedAtUtc ??= DateTime.UtcNow;
+        }
+        else
+        {
+            assignment.CompletedAtUtc = null;
         }
 
         await assignedCourseRepository.UpdateAsync(assignment, cancellationToken);

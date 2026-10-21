@@ -1,0 +1,20 @@
+﻿<header class="topbar" id="top"><a class="brand" href="#top" (click)="$event.preventDefault(); navigate(isAdmin ? 'admin-courses' : 'courses')">Course Learning Platform</a>
+  <nav class="main-nav" aria-label="Main navigation">
+    <ng-container *ngIf="isAdmin"><button [class.active]="page === 'admin-users'" [attr.aria-current]="page === 'admin-users' ? 'page' : null" (click)="navigate('admin-users')">Users</button><button [class.active]="page === 'admin-courses'" [attr.aria-current]="page === 'admin-courses' ? 'page' : null" (click)="navigate('admin-courses')">Courses</button></ng-container>
+    <ng-container *ngIf="session && !isAdmin"><button [class.active]="page === 'courses'" (click)="navigate('courses')">Courses</button><button [class.active]="page === 'my-courses'" (click)="navigate('my-courses')">My courses</button><button [class.active]="page === 'my-analytics'" (click)="navigate('my-analytics')">My analytics</button></ng-container>
+    <ng-container *ngIf="!session"><button [class.active]="page === 'courses'" (click)="navigate('courses')">Courses</button></ng-container>
+  </nav>
+  <div class="session" *ngIf="session; else signedOut"><span class="welcome">{{ session.name }} <span class="role">{{ session.role }}</span></span><button class="secondary" type="button" (click)="signOut()">Sign out</button></div>
+  <ng-template #signedOut><button class="sign-in-link" (click)="navigate('account')">Sign in</button></ng-template>
+</header>
+<main><app-alert-message [message]="message" [error]="error"></app-alert-message>
+  <section *ngIf="page === 'account' && !session" class="auth-section"><div class="page-intro"><p class="eyebrow">LEARN AT YOUR OWN PACE</p><h1>Welcome</h1><p>Sign in or create a learner account to get started.</p></div><app-auth (signedIn)="onSignedIn($event)" (notice)="showNotice($event)"></app-auth></section>
+  <app-courses *ngIf="page === 'courses' && !isAdmin" mode="catalog" [signedIn]="!!session" (notice)="showNotice($event)" (enrollRequest)="enroll($event)"></app-courses>
+  <app-learning *ngIf="page === 'my-courses' && session && !isAdmin" mode="enrollments" [userId]="session.id" (notice)="showNotice($event)"></app-learning>
+  <app-learning *ngIf="page === 'my-analytics' && session && !isAdmin" mode="analytics" [userId]="session.id" (notice)="showNotice($event)"></app-learning>
+  <app-courses *ngIf="page === 'admin-courses' && isAdmin" mode="manage" [isAdmin]="true" [signedIn]="true" (notice)="showNotice($event)"></app-courses>
+  <app-admin-users *ngIf="page === 'admin-users' && isAdmin" mode="manage" (notice)="showNotice($event)"></app-admin-users>
+  <app-courses *ngIf="page === 'courses' && isAdmin" mode="manage" [isAdmin]="true" (notice)="showNotice($event)"></app-courses>
+  <section class="empty-state" *ngIf="page === 'account' && session">You are already signed in.</section>
+</main>
+

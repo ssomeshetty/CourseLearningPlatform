@@ -1,5 +1,6 @@
 using CourseLearningPlatform.Application.Courses.Interfaces;
 using CourseLearningPlatform.Domain.Courses;
+using CourseLearningPlatform.Application;
 using CourseLearningPlatform.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +21,19 @@ public sealed class CourseRepository(AppDbContext context) : ICourseRepository
 
     }
 
-    public async Task<IReadOnlyList<Course>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<PagedResult<Course>> GetPageAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default)
     {
-        return await context.Courses.AsNoTracking().ToListAsync(cancellationToken);
+        var query = context.Courses.AsNoTracking().OrderBy(course => course.Id);
+        var totalCount = await query.CountAsync(cancellationToken);
+        var courses = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return new PagedResult<Course>(courses, page, pageSize, totalCount);
     }
 
     public async Task UpdateAsync(Course course, CancellationToken cancellationToken = default)
@@ -31,14 +42,8 @@ public sealed class CourseRepository(AppDbContext context) : ICourseRepository
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Course course, CancellationToken cancellationToken = default)
     {
-        var course = await context.Courses.FirstOrDefaultAsync(course => course.Id == id, cancellationToken);
-        if (course is null)
-        {
-            return;
-        }
-
         context.Courses.Remove(course);
         await context.SaveChangesAsync(cancellationToken);
     }

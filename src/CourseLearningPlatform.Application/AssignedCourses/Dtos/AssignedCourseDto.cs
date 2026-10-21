@@ -5,6 +5,4 @@ public sealed record AssignedCourseDto(
     int CourseId,
     string CourseTitle,
     string Status,
-    DateTime StartedTimestamp,
-    DateTime? EndedTimestamp,
-    decimal HoursCompleted);
+    DateTime? CompletedAtUtc);

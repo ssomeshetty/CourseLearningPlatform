@@ -30,14 +30,7 @@ namespace CourseLeaningPlatform.Infrastructure.Persistence.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("EndedTimestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("HoursCompleted")
-                        .HasPrecision(8, 2)
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<DateTime>("StartedTimestamp")
+                    b.Property<DateTime?>("CompletedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
@@ -61,6 +54,7 @@ namespace CourseLeaningPlatform.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Cost")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -71,7 +65,13 @@ namespace CourseLeaningPlatform.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Hours")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<string>("Instructor")
                         .IsRequired()
@@ -116,8 +116,9 @@ namespace CourseLeaningPlatform.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PasswordHash")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.HasKey("Id");
 

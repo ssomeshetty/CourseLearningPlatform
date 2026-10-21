@@ -20,7 +20,10 @@ public sealed class AssignedCourseRepository(AppDbContext context) : IAssignedCo
         int courseId,
         CancellationToken cancellationToken = default)
     {
-        return context.AssignedCourses.FirstOrDefaultAsync(
+        return context.AssignedCourses
+            .Include(assignment => assignment.User)
+            .Include(assignment => assignment.Course)
+            .FirstOrDefaultAsync(
             assignment => assignment.UserId == userId && assignment.CourseId == courseId,
             cancellationToken);
     }

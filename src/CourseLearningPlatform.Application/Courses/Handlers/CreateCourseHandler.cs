@@ -13,6 +13,7 @@ public sealed class CreateCourseHandler(ICourseRepository courseRepository)
             Title = command.Title,
             Description = command.Description,
             Instructor = command.Instructor,
+            ImageUrl = command.ImageUrl,
             Cost = command.Cost,
             Hours = command.Hours,
             CreatedAt = DateTime.UtcNow
@@ -37,6 +38,7 @@ public sealed class UpdateCourseHandler(ICourseRepository courseRepository)
         course.Title = command.Title;
         course.Description = command.Description;
         course.Instructor = command.Instructor;
+        course.ImageUrl = command.ImageUrl;
         course.Cost = command.Cost;
         course.Hours = command.Hours;
 
@@ -58,7 +60,7 @@ public sealed class DeleteCourseHandler(ICourseRepository courseRepository)
 
         }
 
-        await courseRepository.DeleteAsync(id, cancellationToken);
+        await courseRepository.DeleteAsync(course, cancellationToken);
         return course;
 
     }

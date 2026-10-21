@@ -3,42 +3,65 @@ using CourseLearningPlatform.Application.AssignedCourses.Commands;
 using CourseLearningPlatform.Application.AssignedCourses.Dtos;
 using CourseLearningPlatform.Application.AssignedCourses.Exceptions;
 using CourseLearningPlatform.Application.AssignedCourses.Handlers;
+using CourseLearningPlatform.Application.AssignedCourses.Interfaces;
 using CourseLearningPlatform.Application.AssignedCourses.Queries;
 using CourseLearningPlatform.Domain.AssignedCourses;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
+using CourseLearningPlatform.Api.Services;
 
 namespace CourseLearningPlatform.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/users/{userId:int}/courses")]
 public sealed class UserAssignedCoursesController(
     EnrollUserInCourseHandler enrollUserInCourseHandler,
     GetUserAssignedCoursesHandler getUserAssignedCoursesHandler,
-    UpdateAssignedCourseStatusHandler updateAssignedCourseStatusHandler) : ControllerBase
+    UpdateAssignedCourseStatusHandler updateAssignedCourseStatusHandler,
+    IDistributedCache cache,
+    IAssignedCourseRepository assignedCourseRepository,
+    EmailService emailService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetByUser(
-        int userId,
-        CancellationToken cancellationToken)
+    private static readonly DistributedCacheEntryOptions CacheOptions = new()
     {
-        var assignments = await getUserAssignedCoursesHandler.HandleAsync(
-            new GetUserAssignedCoursesQuery(userId),
-            cancellationToken);
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2)
+    };
 
-        return assignments is null ? NotFound() : Ok(assignments);
+    [HttpGet]
+    public async Task<IActionResult> GetByUser(int userId, CancellationToken cancellationToken)
+    {
+        if (!CanAccessUser(userId)) return Forbid();
+        var cacheKey = $"user-courses:{userId}";
+        var json = await cache.GetStringAsync(cacheKey, cancellationToken);
+        var assignments = json is null
+            ? null
+            : JsonSerializer.Deserialize<IReadOnlyList<AssignedCourseDto>>(json);
+        if (json is null)
+        {
+            assignments = await getUserAssignedCoursesHandler.HandleAsync(
+                new GetUserAssignedCoursesQuery(userId), cancellationToken);
+            if (assignments is not null)
+            {
+                await cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(assignments), CacheOptions, cancellationToken);
+            }
+        }
+        return assignments is null
+            ? NotFound(new ProblemDetails { Status = 404, Title = "User not found.", Detail = "We couldn't find this user's course list." })
+            : Ok(assignments);
     }
 
     [HttpPost("{courseId:int}")]
-    public async Task<IActionResult> Enroll(
-        int userId,
-        int courseId,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Enroll(int userId, int courseId, CancellationToken cancellationToken)
     {
+        if (!CanAccessUser(userId)) return Forbid();
         try
         {
             var assignment = await enrollUserInCourseHandler.HandleAsync(
-                new EnrollUserInCourseCommand(userId, courseId),
-                cancellationToken);
+                new EnrollUserInCourseCommand(userId, courseId), cancellationToken);
 
             if (assignment is null)
             {
@@ -49,14 +72,14 @@ public sealed class UserAssignedCoursesController(
                 });
             }
 
+            await InvalidateUserCourseDataAsync(userId, courseId, cancellationToken);
+
             var response = new AssignedCourseDto(
                 assignment.UserId,
                 assignment.CourseId,
                 assignment.Course.Title,
                 assignment.Status.ToString(),
-                assignment.StartedTimestamp,
-                assignment.EndedTimestamp,
-                assignment.HoursCompleted);
+                assignment.CompletedAtUtc);
 
             return CreatedAtAction(nameof(GetByUser), new { userId }, response);
         }
@@ -78,7 +101,8 @@ public sealed class UserAssignedCoursesController(
         [FromBody] UpdateAssignedCourseStatusRequest request,
         CancellationToken cancellationToken)
     {
-        if (!Enum.TryParse<AssignedCourseStatus>(request.Status, ignoreCase: true, out var newStatus) ||
+        if (!CanAccessUser(userId)) return Forbid();
+        if (!Enum.TryParse<AssignedCourseStatus>(request.Status, true, out var newStatus) ||
             !Enum.IsDefined(newStatus))
         {
             return BadRequest(new ProblemDetails
@@ -89,35 +113,57 @@ public sealed class UserAssignedCoursesController(
             });
         }
 
-        try
-        {
-            var assignment = await updateAssignedCourseStatusHandler.HandleAsync(
-                new UpdateAssignedCourseStatusCommand(userId, courseId, newStatus),
-                cancellationToken);
+        var previousAssignment = await assignedCourseRepository.GetByIdAsync(userId, courseId, cancellationToken);
+        var newlyCompleted = newStatus == AssignedCourseStatus.Completed &&
+            previousAssignment?.Status != AssignedCourseStatus.Completed;
 
-            if (assignment is null)
+        var assignment = await updateAssignedCourseStatusHandler.HandleAsync(
+            new UpdateAssignedCourseStatusCommand(userId, courseId, newStatus), cancellationToken);
+
+        if (assignment is null)
+        {
+            return NotFound(new ProblemDetails
             {
-                return NotFound();
+                Status = StatusCodes.Status404NotFound,
+                Title = "Enrollment not found.",
+                Detail = "This user is not enrolled in that course."
+            });
+        }
+
+        await InvalidateUserCourseDataAsync(userId, courseId, cancellationToken);
+
+        if (newlyCompleted)
+        {
+            if (previousAssignment is not null)
+            {
+                await emailService.SendAsync(
+                    previousAssignment.User.Email,
+                    "Course completed",
+                    $"Congratulations, {previousAssignment.User.Name}! You have completed " +
+                    $"{previousAssignment.Course.Title}.");
             }
+        }
 
-            return Ok(new
-            {
-                assignment.UserId,
-                assignment.CourseId,
-                Status = assignment.Status.ToString(),
-                assignment.StartedTimestamp,
-                assignment.EndedTimestamp,
-                assignment.HoursCompleted
-            });
-        }
-        catch (InvalidAssignedCourseStatusTransitionException exception)
+        return Ok(new
         {
-            return Conflict(new ProblemDetails
-            {
-                Title = "Invalid course status transition.",
-                Detail = exception.Message,
-                Status = StatusCodes.Status409Conflict
-            });
-        }
+            assignment.UserId,
+            assignment.CourseId,
+            Status = assignment.Status.ToString(),
+            assignment.CompletedAtUtc
+        });
+    }
+
+    private bool CanAccessUser(int userId) => User.IsInRole("Admin") ||
+        (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var authenticatedUserId) &&
+         authenticatedUserId == userId);
+
+    private async Task InvalidateUserCourseDataAsync(
+        int userId,
+        int courseId,
+        CancellationToken cancellationToken)
+    {
+        await cache.RemoveAsync($"user-courses:{userId}", cancellationToken);
+        await cache.RemoveAsync($"user-analytics:{userId}", cancellationToken);
+        await cache.RemoveAsync($"course-analytics:{courseId}", cancellationToken);
     }
 }

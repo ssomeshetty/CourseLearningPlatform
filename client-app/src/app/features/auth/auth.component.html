@@ -1,0 +1,12 @@
+﻿<section class="auth-grid">
+  <form class="panel" (ngSubmit)="signIn()"><h2>Sign in</h2>
+    <label>Email<input name="signinEmail" type="email" [(ngModel)]="signin.email" required></label>
+    <label>Password<input name="signinPassword" type="password" [(ngModel)]="signin.password" required></label><button>Sign in</button>
+  </form>
+  <form class="panel" (ngSubmit)="signUp()"><h2>Create learner account</h2>
+    <label>Name<input name="signupName" [(ngModel)]="signup.name" required minlength="2"></label>
+    <label>Email<input name="signupEmail" type="email" [(ngModel)]="signup.email" required></label>
+    <label>Employee code<input name="signupEmployeeCode" [(ngModel)]="signup.employeeCode" required></label>
+    <label>Password<input name="signupPassword" type="password" [(ngModel)]="signup.password" required minlength="12"></label><button>Create account</button>
+  </form>
+</section>

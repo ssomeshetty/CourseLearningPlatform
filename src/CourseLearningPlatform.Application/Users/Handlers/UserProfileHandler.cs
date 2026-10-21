@@ -3,10 +3,13 @@ using CourseLearningPlatform.Application.Users.Dtos;
 using CourseLearningPlatform.Application.Users.Interfaces;
 using CourseLearningPlatform.Application.Users.Queries;
 using CourseLearningPlatform.Domain.Users;
+using CourseLearningPlatform.Application;
 
 namespace CourseLearningPlatform.Application.Users.Handlers;
 
-public sealed class UserProfileHandler(IUserProfileRepository userRepository)
+public sealed class UserProfileHandler(
+    IUserProfileRepository userRepository,
+    IPasswordHashService passwordHashService)
 {
     public async Task<UserProfileDTO> CreateAsync(
         UserProfileCreateCommand command,
@@ -14,23 +17,25 @@ public sealed class UserProfileHandler(IUserProfileRepository userRepository)
     {
         var user = new UserProfile
         {
-            Name = command.Name,
-            Email = command.Email,
-            EmployeeCode = command.EmployeeCode,
+            Name = command.Name.Trim(),
+            Email = command.Email.Trim().ToLowerInvariant(),
+            EmployeeCode = command.EmployeeCode.Trim(),
             JoiningDate = command.JoiningDate,
-            IsAdmin = false
+            IsAdmin = false,
+            PasswordHash = passwordHashService.Hash(command.Password)
         };
 
         await userRepository.AddAsync(user, cancellationToken);
         return ToDto(user);
     }
 
-    public async Task<IReadOnlyList<UserProfileDTO>> GetAllAsync(
+    public async Task<PagedResult<UserProfileDTO>> GetAllAsync(
         GetAllUserProfilesQuery query,
         CancellationToken cancellationToken = default)
     {
-        var users = await userRepository.GetAllAsync(cancellationToken);
-        return users.Select(ToDto).ToList();
+        var users = await userRepository.GetPageAsync(query.Page, query.PageSize, cancellationToken);
+        return new PagedResult<UserProfileDTO>(
+            users.Items.Select(ToDto).ToList(), users.Page, users.PageSize, users.TotalCount);
     }
 
     public async Task<UserProfileDTO?> GetByIdAsync(
@@ -52,9 +57,9 @@ public sealed class UserProfileHandler(IUserProfileRepository userRepository)
             return null;
         }
 
-        user.Name = command.Name;
-        user.Email = command.Email;
-        user.EmployeeCode = command.EmployeeCode;
+        user.Name = command.Name.Trim();
+        user.Email = command.Email.Trim().ToLowerInvariant();
+        user.EmployeeCode = command.EmployeeCode.Trim();
         user.JoiningDate = command.JoiningDate;
 
         await userRepository.UpdateAsync(user, cancellationToken);
@@ -71,7 +76,7 @@ public sealed class UserProfileHandler(IUserProfileRepository userRepository)
             return false;
         }
 
-        await userRepository.DeleteAsync(id, cancellationToken);
+        await userRepository.DeleteAsync(user, cancellationToken);
         return true;
     }
 

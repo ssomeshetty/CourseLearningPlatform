@@ -27,9 +27,7 @@ public sealed class GetUserAssignedCoursesHandler(
                 assignment.CourseId,
                 assignment.Course.Title,
                 assignment.Status.ToString(),
-                assignment.StartedTimestamp,
-                assignment.EndedTimestamp,
-                assignment.HoursCompleted))
+                assignment.CompletedAtUtc))
             .ToList();
     }
 }
