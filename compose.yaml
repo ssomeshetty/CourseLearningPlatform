@@ -1,0 +1,68 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: ${SA_PASSWORD:?Set SA_PASSWORD in .env}
+    ports:
+      - "1433:1433"
+    volumes:
+      - course_learning_sqlserver:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "SELECT 1", "-No"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - course_learning_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: src/CourseLearningPlatform.Api/Dockerfile
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING:?Set DB_CONNECTION_STRING in .env}
+      ConnectionStrings__Redis: redis:6379
+      Jwt__Issuer: CourseLearningPlatform.Api
+      Jwt__Audience: CourseLearningPlatform.Client
+      Jwt__Key: ${JWT_KEY:?Set JWT_KEY in .env}
+      Smtp__Host: ${SMTP_HOST:-}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__Username: ${SMTP_USERNAME:-}
+      Smtp__Password: ${SMTP_PASSWORD:-}
+      Smtp__From: ${SMTP_FROM:-}
+    ports:
+      - "5198:8080"
+    depends_on:
+      redis:
+        condition: service_healthy
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./client-app
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+volumes:
+  course_learning_redis:
+  course_learning_sqlserver:

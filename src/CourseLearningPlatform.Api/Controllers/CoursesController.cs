@@ -109,6 +109,18 @@ public class CoursesController(
             : Ok(analytics);
     }
 
+    [HttpGet("{id:int}/image")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetImage(int id, CancellationToken cancellationToken)
+    {
+        var course = await courseQueryHandler.GetByIdAsync(new GetCourseByIdQuery(id), cancellationToken);
+        if (course is null)
+            return NotFound(new ProblemDetails { Status = 404, Title = "Course not found." });
+        if (!Uri.TryCreate(course.ImageUrl, UriKind.Absolute, out _))
+            return BadRequest(new ProblemDetails { Status = 400, Title = "This course image link is invalid." });
+        return Redirect(course.ImageUrl);
+    }
+
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(

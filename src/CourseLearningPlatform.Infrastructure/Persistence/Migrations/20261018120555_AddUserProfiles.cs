@@ -23,7 +23,7 @@ namespace CourseLeaningPlatform.Infrastructure.Persistence.Migrations
                     EmployeeCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     JoiningDate = table.Column<DateOnly>(type: "date", nullable: false, defaultValueSql: "GETDATE()"),
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
-                },
+                }, 
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserProfiles", x => x.Id);

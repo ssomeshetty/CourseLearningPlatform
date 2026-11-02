@@ -108,6 +108,7 @@ builder.Services.AddScoped<GetUserCourseAnalyticsHandler>();
 builder.Services.AddTransient<EmailService>();
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -140,6 +141,12 @@ builder.Services.AddCors(options => options.AddPolicy("Frontend", policy =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.Use(async (context, next) =>
 {

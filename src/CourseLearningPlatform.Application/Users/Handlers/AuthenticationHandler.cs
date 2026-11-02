@@ -32,7 +32,7 @@ public sealed class AuthenticationHandler(
             IsAdmin = false,
             PasswordHash = passwordHashService.Hash(command.Password)
         };
-
+    
         await users.AddAsync(user, cancellationToken);
         return CreateResponse(user);
     }

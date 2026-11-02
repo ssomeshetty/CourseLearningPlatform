@@ -6,6 +6,7 @@ import { Course, CourseAnalytics, CourseInput, Page } from '../models/platform.m
 @Injectable({ providedIn: 'root' })
 export class CourseService {
   private readonly api = inject(ApiService);
+  imageUrl(course: Course): string { return course.imageUrl; }
   getPage(page: number, pageSize: number): Promise<Page<Course>> { return firstValueFrom(this.api.request('GET', `/courses?page=${page}&pageSize=${pageSize}`)); }
   getById(id: number): Promise<Course> { return firstValueFrom(this.api.request('GET', `/courses/${id}`)); }
   getAnalytics(id: number): Promise<CourseAnalytics> { return firstValueFrom(this.api.request('GET', `/courses/${id}/analytics`)); }

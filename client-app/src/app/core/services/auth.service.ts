@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
-    try { await firstValueFrom(this.api.request<void>('POST', '/auth/signout')); } catch { /* The token is removed locally either way. */ }
+    try { await firstValueFrom(this.api.request<void>('POST', '/auth/signout')); } catch { }
     localStorage.removeItem('course-platform-token');
     localStorage.removeItem('course-platform-session');
     this.session = null;

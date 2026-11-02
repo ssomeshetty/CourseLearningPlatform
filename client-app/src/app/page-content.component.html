@@ -1,0 +1,16 @@
+﻿<app-alert-message [message]="message" [error]="error"></app-alert-message>
+<section *ngIf="page === 'account' && !session" class="auth-section">
+  <div class="page-intro"><p class="eyebrow">LEARN AT YOUR OWN PACE</p><h1>Welcome</h1><p>Sign in or create a learner account to get started.</p></div>
+  <app-auth (signedIn)="onSignedIn($event)" (notice)="showNotice($event)"></app-auth>
+</section>
+<app-courses *ngIf="page === 'courses' && !isAdmin" mode="catalog" [signedIn]="!!session" (notice)="showNotice($event)" (enrollRequest)="enroll($event)" (courseDetailRequest)="openCourse($event)" (courseListRequest)="backToCourses()"></app-courses>
+<app-courses *ngIf="page === 'course-detail' && !isAdmin" mode="catalog" [signedIn]="!!session" [routeCourseId]="recordId" (notice)="showNotice($event)" (enrollRequest)="enroll($event)" (courseListRequest)="backToCourses()"></app-courses>
+<app-courses *ngIf="page === 'courses' && isAdmin" mode="manage" [isAdmin]="true" [signedIn]="true" (notice)="showNotice($event)" (courseDetailRequest)="openCourse($event, true)" (courseListRequest)="backToCourses(true)"></app-courses>
+<app-learning *ngIf="page === 'my-courses' && session && !isAdmin" mode="enrollments" [userId]="session.id" (notice)="showNotice($event)"></app-learning>
+<app-learning *ngIf="page === 'my-analytics' && session && !isAdmin" mode="analytics" [userId]="session.id" (notice)="showNotice($event)"></app-learning>
+<app-courses *ngIf="page === 'admin-courses' && isAdmin" mode="manage" [isAdmin]="true" [signedIn]="true" (notice)="showNotice($event)" (courseDetailRequest)="openCourse($event, true)" (courseListRequest)="backToCourses(true)"></app-courses>
+<app-courses *ngIf="page === 'admin-course-detail' && isAdmin" mode="manage" [isAdmin]="true" [signedIn]="true" [routeCourseId]="recordId" (notice)="showNotice($event)" (courseListRequest)="backToCourses(true)"></app-courses>
+<app-admin-users *ngIf="page === 'admin-users' && isAdmin" mode="manage" (notice)="showNotice($event)" (userDetailRequest)="openUser($event)"></app-admin-users>
+<app-admin-users *ngIf="page === 'admin-user-detail' && isAdmin" mode="manage" [routeUserId]="recordId" (notice)="showNotice($event)" (userListRequest)="backToUsers()"></app-admin-users>
+<section class="empty-state" *ngIf="page === 'account' && session">You are already signed in.</section>
+
